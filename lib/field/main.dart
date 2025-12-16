@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
+//import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -10,7 +10,7 @@ void main() async {
 
   final dir = await getApplicationDocumentsDirectory();
   await Hive.initFlutter(dir.path);
-  print('Hive base path: ${dir.path}');
+  //print('Hive base path: ${dir.path}');
 
   Hive.registerAdapter(TaskAdapter());
 
@@ -23,11 +23,7 @@ class App extends StatelessWidget {
   const App({super.key});
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'To-Do Hive',
-      theme: ThemeData.light(useMaterial3: true),
-      home: const TodoPage(),
-    );
+    return MaterialApp(title: 'To-Do Hive', theme: ThemeData.light(useMaterial3: true), home: const TodoPage());
   }
 }
 
@@ -39,7 +35,7 @@ class TodoPage extends StatefulWidget {
 
 class _TodoPageState extends State<TodoPage> {
   late final Box<Task> box;
-  final c = TextEditingController();
+  final textEditCont = TextEditingController();
 
   @override
   void initState() {
@@ -48,10 +44,10 @@ class _TodoPageState extends State<TodoPage> {
   }
 
   Future<void> _add() async {
-    final text = c.text.trim();
+    final text = textEditCont.text.trim();
     if (text.isEmpty) return;
     await box.add(Task(title: text, done: false));
-    c.clear();
+    textEditCont.clear();
   }
 
   Future<void> _toggle(int i) async {
@@ -73,9 +69,7 @@ class _TodoPageState extends State<TodoPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('To-Do'),
-        actions: [
-          IconButton(onPressed: _clear, icon: const Icon(Icons.delete_sweep)),
-        ],
+        actions: [IconButton(onPressed: _clear, icon: const Icon(Icons.delete_sweep))],
       ),
       body: Column(
         children: [
@@ -85,11 +79,8 @@ class _TodoPageState extends State<TodoPage> {
               children: [
                 Expanded(
                   child: TextField(
-                    controller: c,
-                    decoration: const InputDecoration(
-                      labelText: 'Add a task',
-                      border: OutlineInputBorder(),
-                    ),
+                    controller: textEditCont,
+                    decoration: const InputDecoration(labelText: 'Add a task', border: OutlineInputBorder()),
                     onSubmitted: (_) => _add(),
                   ),
                 ),
@@ -111,22 +102,9 @@ class _TodoPageState extends State<TodoPage> {
                   itemBuilder: (context, i) {
                     final t = tasks[i];
                     return ListTile(
-                      leading: Checkbox(
-                        value: t.done,
-                        onChanged: (_) => _toggle(i),
-                      ),
-                      title: Text(
-                        t.title,
-                        style: TextStyle(
-                          decoration: t.done
-                              ? TextDecoration.lineThrough
-                              : null,
-                        ),
-                      ),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.delete),
-                        onPressed: () => _delete(i),
-                      ),
+                      leading: Checkbox(value: t.done, onChanged: (_) => _toggle(i)),
+                      title: Text(t.title, style: TextStyle(decoration: t.done ? TextDecoration.lineThrough : null)),
+                      trailing: IconButton(icon: const Icon(Icons.delete), onPressed: () => _delete(i)),
                     );
                   },
                 );
