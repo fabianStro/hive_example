@@ -13,9 +13,7 @@ class TaskAdapter extends TypeAdapter<Task> {
   @override
   Task read(BinaryReader reader) {
     final numOfFields = reader.readByte();
-    final fields = <int, dynamic>{
-      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
-    };
+    final fields = <int, dynamic>{for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read()};
     return Task(title: fields[0] as String, done: fields[1] as bool);
   }
 
@@ -34,8 +32,5 @@ class TaskAdapter extends TypeAdapter<Task> {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is TaskAdapter &&
-          runtimeType == other.runtimeType &&
-          typeId == other.typeId;
+      identical(this, other) || other is TaskAdapter && runtimeType == other.runtimeType && typeId == other.typeId;
 }

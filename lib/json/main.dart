@@ -7,7 +7,7 @@ void main() async {
 
   final dir = await getApplicationDocumentsDirectory();
   await Hive.initFlutter(dir.path);
-  print('Hive base path: ${dir.path}');
+  //print('Hive base path: ${dir.path}');
   await Hive.openBox<List>('tasks_box');
 
   runApp(const App());
@@ -17,10 +17,7 @@ class App extends StatelessWidget {
   const App({super.key});
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData.light(useMaterial3: true),
-      home: const TodoPage(),
-    );
+    return MaterialApp(theme: ThemeData.light(useMaterial3: true), home: const TodoPage());
   }
 }
 
@@ -29,13 +26,11 @@ class Task {
   final bool done;
   const Task({required this.title, required this.done});
 
-  Task copyWith({String? title, bool? done}) =>
-      Task(title: title ?? this.title, done: done ?? this.done);
+  Task copyWith({String? title, bool? done}) => Task(title: title ?? this.title, done: done ?? this.done);
 
   Map<String, dynamic> toMap() => {"title": title, "done": done};
 
-  static Task fromMap(Map<String, dynamic> m) =>
-      Task(title: m["title"] as String, done: m["done"] as bool);
+  static Task fromMap(Map<String, dynamic> m) => Task(title: m["title"] as String, done: m["done"] as bool);
 }
 
 class TodoPage extends StatefulWidget {
@@ -66,11 +61,7 @@ class _TodoPageState extends State<TodoPage> {
 
   Future<void> _load() async {
     final raw = box.get(storageKey);
-    tasks = raw == null
-        ? []
-        : raw
-              .map((e) => Task.fromMap(Map<String, dynamic>.from(e as Map)))
-              .toList();
+    tasks = raw == null ? [] : raw.map((e) => Task.fromMap(Map<String, dynamic>.from(e as Map))).toList();
     setState(() {});
   }
 
@@ -108,9 +99,7 @@ class _TodoPageState extends State<TodoPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('To-Do'),
-        actions: [
-          IconButton(onPressed: _clear, icon: const Icon(Icons.delete_sweep)),
-        ],
+        actions: [IconButton(onPressed: _clear, icon: const Icon(Icons.delete_sweep))],
       ),
       body: Column(
         children: [
@@ -121,10 +110,7 @@ class _TodoPageState extends State<TodoPage> {
                 Expanded(
                   child: TextField(
                     controller: c,
-                    decoration: const InputDecoration(
-                      labelText: 'Add a task',
-                      border: OutlineInputBorder(),
-                    ),
+                    decoration: const InputDecoration(labelText: 'Add a task', border: OutlineInputBorder()),
                     onSubmitted: (_) => _add(),
                   ),
                 ),
@@ -142,22 +128,12 @@ class _TodoPageState extends State<TodoPage> {
                           itemBuilder: (context, i) {
                             final t = tasks[i];
                             return ListTile(
-                              leading: Checkbox(
-                                value: t.done,
-                                onChanged: (_) => _toggle(i),
-                              ),
+                              leading: Checkbox(value: t.done, onChanged: (_) => _toggle(i)),
                               title: Text(
                                 t.title,
-                                style: TextStyle(
-                                  decoration: t.done
-                                      ? TextDecoration.lineThrough
-                                      : null,
-                                ),
+                                style: TextStyle(decoration: t.done ? TextDecoration.lineThrough : null),
                               ),
-                              trailing: IconButton(
-                                icon: const Icon(Icons.delete),
-                                onPressed: () => _delete(i),
-                              ),
+                              trailing: IconButton(icon: const Icon(Icons.delete), onPressed: () => _delete(i)),
                             );
                           },
                         )

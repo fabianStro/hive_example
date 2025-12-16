@@ -12,6 +12,6 @@ class Task {
 
   const Task({required this.title, required this.done});
 
-  Task copyWith({String? title, bool? done, String? Jan}) =>
+  Task copyWith({String? title, bool? done, String? fabian}) =>
       Task(title: title ?? this.title, done: done ?? this.done);
 }
